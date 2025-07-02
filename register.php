@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,9 +10,9 @@
     <title>Sign Up</title>
 </head>
 
-<body>
-    <div class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
-
+<body class=" d-flex flex-column" style="min-height: 100vh;">
+    <?php include_once 'header.php' ?>
+    <div class="container my-4">
         <div class="card">
             <div class="card-header">
                 Sign Up
@@ -33,13 +35,16 @@
                         <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
                         <input type="password" name="c_password" class="form-control" id="exampleInputPassword1">
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
                 </form>
-                <p class="mt-3">เข้าหน้า <a href="index.php"  rel="noopener noreferrer">เข้าสู่ระบบ</a></p>
+                <p class="mt-3">เข้าหน้า <a href="index.php" rel="noopener noreferrer">เข้าสู่ระบบ</a></p>
             </div>
 
         </div>
     </div>
+    <?php include_once 'footer.php' ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
