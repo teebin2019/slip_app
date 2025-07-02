@@ -1,7 +1,8 @@
 <?php session_start();
 
-if (!$_SESSION)
-    header('Location: index.php'); //login ถูกต้องและกระโดดไปหน้าตามที่ต้องการ
+if (!$_SESSION) {
+    header('Location: index.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
