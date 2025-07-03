@@ -30,7 +30,12 @@ $user = json_decode($json_obj);
                 <!-- <a href="#" class="btn btn-success">Add</a> -->
             </div>
             <div class="card-body">
-                <form action="update.php?id=<?= $id  ?>" method="post">
+                <div id="message"></div>
+                <form id="formsubmit">
+                    <div class="mb-3">
+                        <label for="id" class="form-label">Username</label>
+                        <input type="hidden" name="id" class="form-control" value="<?= $user->id ?? '' ?>" id="id">
+                    </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" name="username" class="form-control" value="<?= $user->username ?? '' ?>" id="username">
@@ -46,6 +51,41 @@ $user = json_decode($json_obj);
     </div>
     <?php include_once '../footer.php' ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script>
+        $("#formsubmit").submit(function(event) {
+            event.preventDefault();
+            const id = $('#id').val();
+            const username = $('#username').val();
+            const email = $('#email').val();
+            $.ajax({
+                url: "update.php",
+                method: "POST",
+                timeout: 0,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                data: JSON.stringify({
+                    "id": id,
+                    "username": username,
+                    "email": email,
+                }),
+                success: function(response) {
+                    console.log(response)
+                    if (response.error) {
+                        const message = `<div class="alert alert-danger" role="alert">${response.error} </div>`
+                        $('#message').html(message)
+                    }
+                    if (response.success) {
+                        $(location).prop('href', 'index.php')
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            })
+        });
+    </script>
 
 </body>
 
