@@ -4,15 +4,18 @@ include_once 'connent/db.php';
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $email = trim($_POST['email']);
-        $password = trim($_POST['password']);
+        header('Content-Type: application/json; charset=utf-8');
+        $data = json_decode(file_get_contents('php://input'), true);
+        $email =   isset($data['email']) ? trim($data['email']) : '';
+        $password =  isset($data['password']) ? trim($data['password']) : '';
 
         if (!$email) {
-            echo 'กรุณากรอก email';
+            echo json_encode(['error' => 'กรุณากรอก email']);
             return;
         }
+
         if (!$password) {
-            echo 'กรุณากรอก password';
+            echo  json_encode(['error' => 'กรุณากรอก password']);
             return;
         }
 
@@ -29,14 +32,16 @@ try {
             if (password_verify($password, $hash)) {
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['username'] = $row['username'];
-                header('Location: dashboard.php'); //dashboard ถูกต้องและกระโดดไปหน้าตามที่ต้องการ
+                echo json_encode(['success' => true, 'message' => 'เข้าสู่ระบบสำเร็จ']);
+                return;
+                // header('Location: dashboard.php'); //dashboard ถูกต้องและกระโดดไปหน้าตามที่ต้องการ
             }
-            echo 'Invalid password.';
+            echo json_encode(['error' => 'รหัสผ่านไม่ตรงกัน']);
         } else {
-            echo "Invalid email.";
+            echo json_encode(['error' => 'ไม่พบอีเมล']);
         }
     } else {
-        echo "REQUEST_METHOD ผิด";
+        echo json_encode(['error' => 'REQUEST_METHOD ผิด']);
     }
 } catch (PDOException $e) {
     echo "Login Error: " . $e->getMessage();

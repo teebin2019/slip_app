@@ -1,8 +1,15 @@
-<?php session_start();
+<?php
+session_start();
 include_once '../connent/db.php';
-$stmt = $conn->prepare("SELECT * FROM users");
+
+$id = $_GET['id'];
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
+$stmt->bindParam(':id', $id);
 $stmt->execute();
-$row = $stmt->fetchAll();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$json_obj = json_encode($row);
+$user = json_decode($json_obj);
+
 ?>
 
 <!DOCTYPE html>
@@ -24,34 +31,17 @@ $row = $stmt->fetchAll();
                 <!-- <a href="#" class="btn btn-success">Add</a> -->
             </div>
             <div class="card-body">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Created_at</th>
-                            <th scope="col">Updated_at</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($row as $key => $item): ?>
-                            <tr>
-                                <th scope="row"> <?= ++$key ?></th>
-                                <td> <?= $item['username'] ?></td>
-                                <td><?= $item['email'] ?></td>
-                                <td><?= $item['created_at'] ?></td>
-                                <td><?= $item['updated_at'] ?></td>
-                                <td>
-                                    <a href="#" class="btn btn-info">Show</a>
-                                    <a href="#" class="btn btn-warning">Edit</a>
-                                    <a href="#" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <form>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" value="<?= $user->username ?? '' ?>" id="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" name="email" class="form-control" value="<?= $user->email ?? '' ?>" id="email">
+                    </div>
+                    <a href="index.php" class="btn btn-primary">ย้อนกับ</a>
+                </form>
             </div>
         </div>
     </div>

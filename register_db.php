@@ -2,8 +2,8 @@
 include_once 'connent/db.php';
 
 try {
-    header('Content-Type: application/json; charset=utf-8');
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        header('Content-Type: application/json; charset=utf-8');
 
         // รับข้อมูล JSON
         $data = json_decode(file_get_contents('php://input'), true);
@@ -69,5 +69,6 @@ try {
         echo json_encode(['error' => 'REQUEST_METHOD ผิด']);
     }
 } catch (PDOException $e) {
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => $e->getMessage()]);
 }

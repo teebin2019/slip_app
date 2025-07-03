@@ -17,11 +17,8 @@
                 Sign Up
             </div>
             <div class="card-body">
-                <div id="error"></div>
-                <div id="success"></div>
-                <!-- <div class="alert alert-danger" role="alert">
-                    A simple danger alert—check it out!
-                </div> -->
+                <div id="message"></div>
+               
                 <form id="formsubmit">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -75,12 +72,17 @@
                 success: function(response) {
                     console.log(response)
                     if (response.error) {
-                        const messent = `<div class="alert alert-danger" role="alert">${response.error} </div>`
-                        $('#error').html(messent)
+                        const message = `<div class="alert alert-danger" role="alert">${response.error} </div>`
+                        $('#message').html(message)
                     }
                     if (response.success) {
-                        const messent = `<div class="alert alert-success" role="alert">${response.message} </div>`
-                        $('#error').html(messent)
+                        const message = `<div class="alert alert-success" role="alert">${response.message} </div>`
+                        $('#message').html(message)
+
+                        $('#username').val('')
+                        $('#email').val('')
+                        $('#password').val('')
+                        $('#c_password').val('')
                     }
                     // You will get response from your PHP page (what you echo or print)
                 },
