@@ -2,25 +2,31 @@
 include_once 'connent/db.php';
 
 try {
+    header('Content-Type: application/json; charset=utf-8');
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = trim($_POST['username']);
-        $email = trim($_POST['email']);
-        $password = trim($_POST['password']);
-        $c_password = trim($_POST['c_password']);
+
+        // รับข้อมูล JSON
+        $data = json_decode(file_get_contents('php://input'), true);
+
+
+        $username = isset($data['username']) ? trim($data['username']) : '';
+        $email = isset($data['email']) ? trim($data['email']) : '';
+        $password = isset($data['password']) ? trim($data['password']) : '';
+        $c_password = isset($data['c_password']) ? trim($data['c_password']) : '';
+
 
         if (!$username) {
-            echo 'กรูณากรอก username';
+            echo json_encode(['error' => 'กรุณากรอก username']);
             return;
         }
         if (!$email) {
-            echo 'กรูณากรอก email';
+            echo json_encode(['error' => 'กรุณากรอก email']);
             return;
         }
         if (!$password) {
-            echo 'กรูณากรอก password';
+            echo json_encode(['error' => 'กรุณากรอก password']);
             return;
         }
-
 
         // ค้นหา username
         $stmt = $conn->prepare("SELECT username FROM users WHERE username = :username");
@@ -29,8 +35,7 @@ try {
         $user = $stmt->fetchColumn(0);
 
         if (!empty($user)) {
-            echo "username
-         Dupicate";
+            echo json_encode(['error' => 'username ซ้ำ']);
             return;
         }
 
@@ -41,30 +46,28 @@ try {
         $user = $stmt->fetchColumn(0);
 
         if (!empty($user)) {
-            echo "email Dupicate";
+            echo json_encode(['error' => 'email ซ้ำ']);
             return;
         }
 
-
         if ($password != $c_password) {
-            echo "รหัสผ่านไม่ตรงกัน";
+            echo json_encode(['error' => 'รหัสผ่านไม่ตรงกัน']);
             return;
         }
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
         // เพิ่มข้อมูล
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password)
-    VALUES (:username, :email, :password)");
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hash);
         $stmt->execute();
-        header('Location: index.php'); //login ถูกต้องและกระโดดไปหน้าตามที่ต้องการ
-        echo "New records created successfully";
+
+        echo json_encode(['success' => true, 'message' => 'สมัครสมาชิกสำเร็จ']);
     } else {
-        echo "REQUEST_METHOD ผิด";
+        echo json_encode(['error' => 'REQUEST_METHOD ผิด']);
     }
 } catch (PDOException $e) {
-    echo "Register Error: " . $e->getMessage();
+    echo json_encode(['error' => $e->getMessage()]);
 }
