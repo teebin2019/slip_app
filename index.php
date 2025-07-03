@@ -73,8 +73,8 @@
                         $('#message').html(message)
                     }
                     if (response.success) {
-                        const message = `<div class="alert alert-success" role="alert">${response.message} </div>`
-                        $('#message').html(message)
+                        // const message = `<div class="alert alert-success" role="alert">${response.message} </div>`
+                        // $('#message').html(message)
                         $(location).prop('href', 'dashboard.php')
                         
                     }

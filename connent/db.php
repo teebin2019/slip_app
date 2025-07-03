@@ -1,9 +1,14 @@
 <?php
+require   __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "slip_app";
+
+$servername = $_ENV['SERVERNAME'];
+$username = $_ENV['USERNAME'];
+$password = $_ENV['PASSWORD'];
+$dbname = $_ENV['DATABASE'];
+$apikey = $_ENV['API_KEY'];
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
